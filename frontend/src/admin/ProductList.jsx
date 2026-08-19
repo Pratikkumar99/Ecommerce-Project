@@ -46,7 +46,7 @@ export default function ProductList() {
                 {products.map((product) => (
                     <tr key={product._id} className="text-center">
                         <td className="border border-gray-200 px-4 py-2">{product.title}</td>
-                        <td className="border border-gray-200 px-4 py-2">${product.price}</td>
+                        <td className="border border-gray-200 px-4 py-2">₹{product.price}</td>
                         <td className="border border-gray-200 px-4 py-2">{product.stock}</td>
                         <td className="border border-gray-200 px-4 py-2">
                             <Link to={`/admin/products/edit/${product._id}`} className="text-blue-500 hover:underline mr-4">

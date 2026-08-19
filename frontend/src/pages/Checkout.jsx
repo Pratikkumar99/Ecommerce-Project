@@ -28,7 +28,7 @@ export default function Checkout() {
     0
   );
 
-  // ✅ PLACE ORDER + CLEAR CART
+  // PLACE ORDER + CLEAR CART
   const placeOrder = async () => {
     if (!selectedAddress) {
       alert("Please select address");
@@ -67,7 +67,7 @@ export default function Checkout() {
             <p className="text-sm">
               {addr.addressLine}, {addr.city}, {addr.state} - {addr.pincode}
             </p>
-            <p className="text-sm">📞 {addr.phone}</p>
+            <p className="text-sm"> {addr.phone}</p>
           </label>
         ))}
       </div>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import api from "../api/axios";
 
 export default function Signup() {
@@ -8,6 +9,7 @@ export default function Signup() {
     password:""
   })
   const [msg,setMsg]=useState("");
+  const navigate = useNavigate();
 
   const handleChange=(e)=>{
     setForm({
@@ -22,6 +24,9 @@ export default function Signup() {
     try{
       const response=await api.post("/auth/signup",form);
       setMsg(response.data.message);
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     } catch(err){
       setMsg(err.response?.data?.message || "An error occurred" );
     }

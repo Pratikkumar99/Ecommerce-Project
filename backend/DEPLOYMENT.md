@@ -61,7 +61,7 @@ In your frontend code, update the API base URL to point to your deployed backend
 
 ```javascript
 // Replace localhost URL with your deployed backend URL
-const API_BASE_URL = 'https://mern-ecom-backend.onrender.com/api';
+const API_BASE_URL = 'https://shopora-ge15.onrender.com';
 ```
 
 ## Alternative Deployment Options

@@ -25,15 +25,21 @@ export default function Home() {
       return;
     }
 
-    const res = await api.post(`/cart/add`, { userId, productId });
+    try {
+      const res = await api.post(`/cart/add`, { userId, productId });
+      
+      const total = res.data.cart.items.reduce(
+        (sum, item) => sum + item.productId.price * item.quantity,
+        0
+      );
 
-    const total = res.data.cart.items.reduce(
-      (sum, item) => sum + item.productId.price * item.quantity,
-      0
-    );
-
-    localStorage.setItem("cartCount", total);
-    window.dispatchEvent(new Event("cartUpdated"));
+      localStorage.setItem("cartCount", total);
+      window.dispatchEvent(new Event("cartUpdated"));
+      alert("Item added to cart!");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      alert("Failed to add item to cart. Please try again.");
+    }
   };
   return (
     <div className="p-6">
@@ -57,9 +63,11 @@ export default function Home() {
                focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">All Categories</option>
-          <option value="Laptops">Laptops</option>
-          <option value="Mobiles">Mobiles</option>
-          <option value="Tablets">Tablets</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Fashion">Fashion</option>
+          <option value="Food">Food</option>
+          <option value="Sports">Sports</option>
+          <option value="Home">Home</option>
         </select>
       </div>
 
@@ -81,7 +89,7 @@ export default function Home() {
 
             {/* Price + Add to Cart (same line) */}
             <div className="mt-2 flex items-center justify-between">
-              <p className="text-gray-700 font-semibold">${product.price}</p>
+              <p className="text-gray-700 font-semibold">₹{product.price}</p>
 
               <button
                 onClick={() => addToCart(product._id)}

@@ -86,6 +86,12 @@ export const getCart = async (req, res) => {
 
     const cart = await Cart.findOne({ userId }).populate("items.productId");
 
+    // Filter out items with invalid product IDs
+    if (cart && cart.items) {
+      cart.items = cart.items.filter(item => item.productId !== null);
+      await cart.save();
+    }
+
     res.json(cart);
   } catch (error) {
     res.status(500).json({ message: "Server Error", error });

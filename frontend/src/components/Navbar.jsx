@@ -11,11 +11,15 @@ export default function Navbar() {
         const loadCart = async () => {
             if (!userId) return setCartCount(0);
 
-            const res = await api.get(`/cart/${userId}`);
-            const total = res.data.items.reduce(
-                (sum,item) => sum + item.quantity, 0
-            );
-            setCartCount(total);
+            try {
+                const res = await api.get(`/cart/${userId}`);
+                const total = res.data?.items?.reduce(
+                    (sum,item) => sum + item.quantity, 0
+                ) || 0;
+                setCartCount(total);
+            } catch (error) {
+                setCartCount(0);
+            }
         }
         loadCart();
         window.addEventListener("cartUpdated", loadCart);
@@ -33,7 +37,7 @@ export default function Navbar() {
 
     return (
         <nav className="flex justify-between p-4 shadow bg-black text-white">
-            <Link to= "/" className="font-bold text-xl">Mohit Store</Link>
+            <Link to= "/" className="font-bold text-xl">Shopora</Link>
 
             <div className="flex gap-4 items-center">
                 <Link to="/cart" className="relative text-xl">

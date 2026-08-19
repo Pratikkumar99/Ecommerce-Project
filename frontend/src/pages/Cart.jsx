@@ -10,8 +10,13 @@ export default function Cart() {
   //Load cart data
   const loadCart = async () => {
     if (!userId) return;
-    const res = await api.get(`/cart/${userId}`);
-    setCart(res.data);
+    try {
+      const res = await api.get(`/cart/${userId}`);
+      setCart(res.data);
+    } catch (error) {
+      console.error("Error loading cart:", error);
+      setCart({ items: [] });
+    }
   };
 
   useEffect(() => {
@@ -41,7 +46,7 @@ export default function Cart() {
   }
 
   const total = cart.items.reduce(
-    (sum, item) => sum + item.productId.price * item.quantity,
+    (sum, item) => sum + (item.productId?.price || 0) * item.quantity,
     0
   );
 
@@ -53,30 +58,30 @@ export default function Cart() {
         <div>Your cart is empty.</div>
       ) : (
         <div className="space-y-4">
-          {cart.items.map((item) => (
+          {cart.items.map((item, index) => (
             <div
-              key={item.productId._id}
+              key={item.productId?._id || item.productId || `cart-item-${index}`}
               className="flex items-center justify-between p-4 border rounded"
             >
               <div className="flex items-center gap-4">
                 <img
-                  src={item.productId.image}
-                  alt={item.productId.title}
+                  src={item.productId?.image || 'https://via.placeholder.com/64'}
+                  alt={item.productId?.title || 'Product'}
                   className="w-16 h-16 object-cover rounded"
                 />
                 <div>
                   <h2 className="text-lg font-semibold">
-                    {item.productId.title}
+                    {item.productId?.title || 'Product not found'}
                   </h2>
                   <p className="text-gray-600">
-                    ${item.productId.price.toFixed(2)}
+                    ₹{item.productId?.price?.toFixed(2) || '0.00'}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() =>
-                    updateQty(item.productId._id, item.quantity - 1)
+                    updateQty(item.productId?._id || item.productId, item.quantity - 1)
                   }
                   className="px-2 py-1 bg-gray-200 rounded"
                 >
@@ -85,7 +90,7 @@ export default function Cart() {
                 <span>{item.quantity}</span>
                 <button
                   onClick={() =>
-                    updateQty(item.productId._id, item.quantity + 1)
+                    updateQty(item.productId?._id || item.productId, item.quantity + 1)
                   }
                   className="px-2 py-1 bg-gray-200 rounded"
                 >
@@ -94,11 +99,11 @@ export default function Cart() {
               </div>
               <div>
                 <p className="font-semibold">
-                  ${(item.productId.price * item.quantity).toFixed(2)}
+                  ₹{((item.productId?.price || 0) * item.quantity).toFixed(2)}
                 </p>
               </div>
               <button
-                onClick={() => removeItem(item.productId._id)}
+                onClick={() => removeItem(item.productId?._id || item.productId)}
                 className="text-red-500"
               >
                 Remove
@@ -107,7 +112,7 @@ export default function Cart() {
           ))}
 
           <div className="text-right mt-4">
-            <h2 className="text-xl font-bold">Total: ${total.toFixed(2)}</h2>
+            <h2 className="text-xl font-bold">Total: ₹{total.toFixed(2)}</h2>
           </div>
           <button onClick={()=> navigate("/checkout-address")} className="w-full bg-blue-500 text-white p-2 rounded">
             Proceed to Checkout
